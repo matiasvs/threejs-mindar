@@ -16,10 +16,12 @@ class ARApp {
             const loadingScreen = document.getElementById('loading-screen');
             const errorMessage = document.getElementById('error-message');
 
-            // Initialize MindAR
+            // Initialize MindAR with smoothing for better stability
             this.mindarThree = new MindARThree({
                 container: document.getElementById('ar-container'),
                 imageTargetSrc: './targets.mind', // Compiled target file
+                filterMinCF: 0.0001, // Reduce jitter (default: 0.001)
+                filterBeta: 1000,    // Smoothing factor (default: 1000)
             });
 
             const { renderer, scene, camera } = this.mindarThree;
