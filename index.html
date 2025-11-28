@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>AR Image Tracking - Three.js + MindAR</title>
+
+  <!-- MindAR CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"></script>
+
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p>Cargando experiencia AR...</p>
+    </div>
+  </div>
+
+  <!-- AR Container -->
+  <div id="ar-container"></div>
+
+  <!-- Instructions -->
+  <div id="instructions">
+    <p>📱 Apunta la cámara a la imagen objetivo</p>
+  </div>
+
+  <!-- Error Message -->
+  <div id="error-message" style="display: none;">
+    <p>⚠️ Error al inicializar AR. Por favor, permite el acceso a la cámara.</p>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
