@@ -7,6 +7,9 @@ export default defineConfig({
     assetsDir: 'assets',
     sourcemap: false,
     minify: 'esbuild',
+    rollupOptions: {
+      external: ['three', 'mindar-image-three'],
+    },
   },
   server: {
     host: true,
