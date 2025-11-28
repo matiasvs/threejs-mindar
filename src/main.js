@@ -129,15 +129,19 @@ class ARApp {
 }
 
 // Wait for MindAR to be available
-function waitForMindAR(timeout = 10000) {
+function waitForMindAR(timeout = 30000) {
     return new Promise((resolve, reject) => {
         const startTime = Date.now();
 
         const checkMindAR = () => {
-            if (window.MINDAR && window.MINDAR.IMAGE) {
+            if (window.MINDAR && window.MINDAR.IMAGE && window.THREE) {
+                console.log('✅ All libraries loaded successfully');
                 resolve();
             } else if (Date.now() - startTime > timeout) {
-                reject(new Error('MindAR library not loaded. Please check your internet connection.'));
+                const missing = [];
+                if (!window.THREE) missing.push('Three.js');
+                if (!window.MINDAR) missing.push('MindAR');
+                reject(new Error(`Failed to load: ${missing.join(', ')}`));
             } else {
                 setTimeout(checkMindAR, 100);
             }

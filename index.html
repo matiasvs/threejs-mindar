@@ -33,53 +33,12 @@
     <p>⚠️ Error al inicializar AR. Por favor, permite el acceso a la cámara.</p>
   </div>
 
-  <!-- Load dependencies from CDN first, then load our app -->
-  <script>
-    // Load Three.js first
-    const threeScript = document.createElement('script');
-    threeScript.src = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js';
-    threeScript.crossOrigin = 'anonymous';
+  <!-- Load CDN dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"></script>
 
-    threeScript.onload = function () {
-      console.log('Three.js loaded');
-
-      // Then load MindAR
-      const mindarScript = document.createElement('script');
-      mindarScript.src = 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
-      mindarScript.crossOrigin = 'anonymous';
-
-      mindarScript.onload = function () {
-        console.log('MindAR loaded');
-
-        // Finally load our app
-        const appScript = document.createElement('script');
-        appScript.type = 'module';
-        appScript.src = './src/main.js';
-        document.body.appendChild(appScript);
-      };
-
-      mindarScript.onerror = function () {
-        console.error('Failed to load MindAR');
-        showError('Error cargando MindAR. Verifica tu conexión a internet.');
-      };
-
-      document.body.appendChild(mindarScript);
-    };
-
-    threeScript.onerror = function () {
-      console.error('Failed to load Three.js');
-      showError('Error cargando Three.js. Verifica tu conexión a internet.');
-    };
-
-    function showError(message) {
-      document.getElementById('loading-screen').style.display = 'none';
-      const errorDiv = document.getElementById('error-message');
-      errorDiv.querySelector('p').innerHTML = '⚠️ ' + message;
-      errorDiv.style.display = 'block';
-    }
-
-    document.body.appendChild(threeScript);
-  </script>
+  <!-- Load our app after CDN is ready -->
+  <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>
