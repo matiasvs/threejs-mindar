@@ -13,7 +13,4 @@ export default defineConfig({
     port: 3000,
     open: true,
   },
-  optimizeDeps: {
-    include: ['three', 'mind-ar/dist/mindar-image-three.prod.js'],
-  },
 });

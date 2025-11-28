@@ -1,6 +1,6 @@
-// Use THREE from CDN (loaded globally)
-const THREE = window.THREE;
-// MindARThree is loaded globally from CDN
+// THREE and MindARThree will be loaded globally from CDN
+// We access them from window after they're loaded
+/* global THREE */
 
 class ARApp {
     constructor() {
