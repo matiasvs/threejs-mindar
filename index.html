@@ -8,6 +8,17 @@
   <meta name="mobile-web-app-capable" content="yes">
   <title>AR Image Tracking - Three.js + MindAR</title>
 
+  <!-- Import map for ES modules -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.149.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.149.0/examples/jsm/",
+      "mindar-image-three": "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
+    }
+  }
+  </script>
+
   <link rel="stylesheet" href="/src/style.css">
 </head>
 
@@ -33,11 +44,7 @@
     <p>⚠️ Error al inicializar AR. Por favor, permite el acceso a la cámara.</p>
   </div>
 
-  <!-- Load CDN dependencies -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"></script>
-
-  <!-- Load our app after CDN is ready -->
+  <!-- Load our app as ES module -->
   <script type="module" src="/src/main.js"></script>
 </body>
 

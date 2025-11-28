@@ -1,6 +1,5 @@
-// THREE and MindARThree will be loaded globally from CDN
-// We access them from window after they're loaded
-/* global THREE */
+import * as THREE from 'three';
+import { MindARThree } from 'mindar-image-three';
 
 class ARApp {
     constructor() {
@@ -17,14 +16,7 @@ class ARApp {
             const loadingScreen = document.getElementById('loading-screen');
             const errorMessage = document.getElementById('error-message');
 
-            // Check if MindAR is loaded from CDN
-            if (!window.MINDAR || !window.MINDAR.IMAGE) {
-                throw new Error('MindAR library not loaded. Please check your internet connection.');
-            }
-
-            // Initialize MindAR (loaded from CDN)
-            const { MindARThree } = window.MINDAR.IMAGE;
-
+            // Initialize MindAR
             this.mindarThree = new MindARThree({
                 container: document.getElementById('ar-container'),
                 imageTargetSrc: './targets.mind', // Compiled target file
@@ -128,35 +120,9 @@ class ARApp {
     }
 }
 
-// Wait for MindAR to be available
-function waitForMindAR(timeout = 30000) {
-    return new Promise((resolve, reject) => {
-        const startTime = Date.now();
-
-        const checkMindAR = () => {
-            if (window.MINDAR && window.MINDAR.IMAGE && window.THREE) {
-                console.log('✅ All libraries loaded successfully');
-                resolve();
-            } else if (Date.now() - startTime > timeout) {
-                const missing = [];
-                if (!window.THREE) missing.push('Three.js');
-                if (!window.MINDAR) missing.push('MindAR');
-                reject(new Error(`Failed to load: ${missing.join(', ')}`));
-            } else {
-                setTimeout(checkMindAR, 100);
-            }
-        };
-
-        checkMindAR();
-    });
-}
-
-// Initialize app when DOM and MindAR are ready
+// Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        // Wait for MindAR to load
-        await waitForMindAR();
-
         const app = new ARApp();
         await app.init();
 
@@ -167,11 +133,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     } catch (error) {
-        console.error('Failed to load MindAR:', error);
+        console.error('Error initializing AR:', error);
         document.getElementById('loading-screen').style.display = 'none';
         const errorMessage = document.getElementById('error-message');
         const errorText = errorMessage.querySelector('p');
-        errorText.innerHTML = '⚠️ Error cargando MindAR.<br>Verifica tu conexión a internet y recarga la página.';
+        errorText.innerHTML = `⚠️ Error al inicializar AR:<br>${error.message}`;
         errorMessage.style.display = 'block';
     }
 });
