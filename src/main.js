@@ -13,16 +13,20 @@ class ARApp {
 
     async init() {
         try {
-            // Hide loading screen after initialization
             const loadingScreen = document.getElementById('loading-screen');
             const errorMessage = document.getElementById('error-message');
+
+            // Check if MindAR is loaded from CDN
+            if (!window.MINDAR || !window.MINDAR.IMAGE) {
+                throw new Error('MindAR library not loaded. Please check your internet connection.');
+            }
 
             // Initialize MindAR (loaded from CDN)
             const { MindARThree } = window.MINDAR.IMAGE;
 
             this.mindarThree = new MindARThree({
                 container: document.getElementById('ar-container'),
-                imageTargetSrc: '/targets.mind', // Compiled target file
+                imageTargetSrc: './targets.mind', // Compiled target file
             });
 
             const { renderer, scene, camera } = this.mindarThree;
@@ -83,8 +87,24 @@ class ARApp {
 
         } catch (error) {
             console.error('Error initializing AR:', error);
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('error-message').style.display = 'block';
+            const loadingScreen = document.getElementById('loading-screen');
+            const errorMessage = document.getElementById('error-message');
+            const errorText = errorMessage.querySelector('p');
+
+            loadingScreen.style.display = 'none';
+
+            // Provide specific error messages
+            if (error.message && error.message.includes('targets.mind')) {
+                errorText.innerHTML = '⚠️ Archivo targets.mind no encontrado.<br>Por favor, compila tu imagen objetivo primero.';
+            } else if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+                errorText.innerHTML = '📷 Permiso de cámara denegado.<br>Por favor, permite el acceso a la cámara y recarga la página.';
+            } else if (error.message && error.message.includes('MindAR')) {
+                errorText.innerHTML = '⚠️ Error cargando MindAR.<br>Verifica tu conexión a internet.';
+            } else {
+                errorText.innerHTML = `⚠️ Error al inicializar AR:<br>${error.message}`;
+            }
+
+            errorMessage.style.display = 'block';
         }
     }
 
