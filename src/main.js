@@ -87,14 +87,14 @@ class ARApp {
             loadingScreen.style.display = 'none';
 
             // Provide specific error messages
-            if (error.message && error.message.includes('targets.mind')) {
+            const errorMsg = error?.message || String(error);
+
+            if (errorMsg.includes('targets.mind') || errorMsg.includes('404')) {
                 errorText.innerHTML = '⚠️ Archivo targets.mind no encontrado.<br>Por favor, compila tu imagen objetivo primero.';
-            } else if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+            } else if (error?.name === 'NotAllowedError' || error?.name === 'PermissionDeniedError') {
                 errorText.innerHTML = '📷 Permiso de cámara denegado.<br>Por favor, permite el acceso a la cámara y recarga la página.';
-            } else if (error.message && error.message.includes('MindAR')) {
-                errorText.innerHTML = '⚠️ Error cargando MindAR.<br>Verifica tu conexión a internet.';
             } else {
-                errorText.innerHTML = `⚠️ Error al inicializar AR:<br>${error.message}`;
+                errorText.innerHTML = `⚠️ Error al inicializar AR:<br>${errorMsg}`;
             }
 
             errorMessage.style.display = 'block';
