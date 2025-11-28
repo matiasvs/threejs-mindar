@@ -1,4 +1,5 @@
-import * as THREE from 'three';
+// Use THREE from CDN (loaded globally)
+const THREE = window.THREE;
 // MindARThree is loaded globally from CDN
 
 class ARApp {
@@ -127,15 +128,46 @@ class ARApp {
     }
 }
 
-// Initialize app when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    const app = new ARApp();
-    app.init();
+// Wait for MindAR to be available
+function waitForMindAR(timeout = 10000) {
+    return new Promise((resolve, reject) => {
+        const startTime = Date.now();
 
-    // Stop AR when page is hidden
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            app.stop();
-        }
+        const checkMindAR = () => {
+            if (window.MINDAR && window.MINDAR.IMAGE) {
+                resolve();
+            } else if (Date.now() - startTime > timeout) {
+                reject(new Error('MindAR library not loaded. Please check your internet connection.'));
+            } else {
+                setTimeout(checkMindAR, 100);
+            }
+        };
+
+        checkMindAR();
     });
+}
+
+// Initialize app when DOM and MindAR are ready
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // Wait for MindAR to load
+        await waitForMindAR();
+
+        const app = new ARApp();
+        await app.init();
+
+        // Stop AR when page is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                app.stop();
+            }
+        });
+    } catch (error) {
+        console.error('Failed to load MindAR:', error);
+        document.getElementById('loading-screen').style.display = 'none';
+        const errorMessage = document.getElementById('error-message');
+        const errorText = errorMessage.querySelector('p');
+        errorText.innerHTML = '⚠️ Error cargando MindAR.<br>Verifica tu conexión a internet y recarga la página.';
+        errorMessage.style.display = 'block';
+    }
 });
