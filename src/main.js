@@ -15,10 +15,23 @@ class ARApp {
         try {
             const loadingScreen = document.getElementById('loading-screen');
             const errorMessage = document.getElementById('error-message');
+            const container = document.getElementById('ar-container');
+
+            // Validate container exists
+            if (!container) {
+                throw new Error('AR container not found');
+            }
+
+            // Ensure container has dimensions
+            if (container.clientWidth === 0 || container.clientHeight === 0) {
+                console.warn('Container has no dimensions, setting defaults');
+                container.style.width = '100vw';
+                container.style.height = '100vh';
+            }
 
             // Initialize MindAR with smoothing for better stability
             this.mindarThree = new MindARThree({
-                container: document.getElementById('ar-container'),
+                container: container,
                 imageTargetSrc: './targets.mind', // Compiled target file
                 filterMinCF: 0.0001, // Reduce jitter (default: 0.001)
                 filterBeta: 1000,    // Smoothing factor (default: 1000)
