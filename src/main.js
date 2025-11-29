@@ -109,7 +109,10 @@ class ARApp {
                 console.log('AR started successfully');
             } catch (startError) {
                 console.error('Error starting AR:', startError);
-                throw new Error(`Failed to start AR: ${startError.message || 'Unknown error'}`);
+                const errorMsg = startError && typeof startError === 'object' && startError.message
+                    ? startError.message
+                    : String(startError || 'Unknown error');
+                throw new Error(`Failed to start AR: ${errorMsg}`);
             }
 
             // Hide loading screen
@@ -126,6 +129,8 @@ class ARApp {
             const loadingScreen = document.getElementById('loading-screen');
             const errorMessage = document.getElementById('error-message');
             const errorText = errorMessage.querySelector('p');
+
+            loadingScreen.style.display = 'none';
 
             loadingScreen.style.display = 'none';
 
