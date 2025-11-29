@@ -32,6 +32,29 @@ class ARApp {
             // Wait a bit to ensure DOM is fully ready
             await new Promise(resolve => setTimeout(resolve, 100));
 
+            // 1. Verify targets.mind exists
+            console.log('Checking targets.mind...');
+            try {
+                const response = await fetch('./targets.mind');
+                if (!response.ok) {
+                    throw new Error(`Failed to load targets.mind: ${response.status} ${response.statusText}`);
+                }
+                console.log('targets.mind found and accessible');
+            } catch (networkError) {
+                throw new Error(`Network error loading targets.mind: ${networkError.message}`);
+            }
+
+            // 2. Verify Camera Permissions
+            console.log('Checking camera permissions...');
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                // Stop the stream immediately, we just wanted to check permissions
+                stream.getTracks().forEach(track => track.stop());
+                console.log('Camera permission granted');
+            } catch (cameraError) {
+                throw new Error(`Camera permission denied or error: ${cameraError.message}`);
+            }
+
             console.log('Initializing MindAR...');
 
             // Initialize MindAR with smoothing for better stability
@@ -40,6 +63,9 @@ class ARApp {
                 imageTargetSrc: './targets.mind',
                 filterMinCF: 0.0001,
                 filterBeta: 1000,
+                uiLoading: 'no', // Disable default loading UI to prevent conflicts
+                uiScanning: 'no', // Disable default scanning UI
+                uiError: 'no',    // Disable default error UI
             });
 
             // Wait for MindAR to be ready
