@@ -44,15 +44,30 @@ class ARApp {
                 throw new Error(`Network error loading targets.mind: ${networkError.message}`);
             }
 
-            // 2. Verify Camera Permissions
+            // 2. Verify Camera Permissions and Availability
             console.log('Checking camera permissions...');
             try {
+                // List all devices first for debugging
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                console.log('Available devices:', devices.map(d => `${d.kind}: ${d.label}`));
+
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                if (videoDevices.length === 0) {
+                    throw new Error('No video input devices found. Please connect a webcam or use a mobile device.');
+                }
+
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 // Stop the stream immediately, we just wanted to check permissions
                 stream.getTracks().forEach(track => track.stop());
                 console.log('Camera permission granted');
             } catch (cameraError) {
-                throw new Error(`Camera permission denied or error: ${cameraError.message}`);
+                let msg = cameraError.message;
+                if (cameraError.name === 'NotFoundError' || msg.includes('device not found')) {
+                    msg = 'No se encontró ninguna cámara. Por favor conecta una webcam o usa un dispositivo móvil.';
+                } else if (cameraError.name === 'NotAllowedError' || msg.includes('permission denied')) {
+                    msg = 'Permiso de cámara denegado. Por favor permite el acceso.';
+                }
+                throw new Error(msg);
             }
 
             console.log('Initializing MindAR...');
