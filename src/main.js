@@ -76,8 +76,8 @@ class ARApp {
             this.mindarThree = new MindARThree({
                 container: container,
                 imageTargetSrc: './targets.mind',
-                filterMinCF: 0.0001,
-                filterBeta: 1000,
+                filterMinCF: 0.000001, // Aggressive smoothing to prevent jitter
+                filterBeta: 0.001,     // Very low beta for maximum stability
                 uiLoading: 'no', // Disable default loading UI to prevent conflicts
                 uiScanning: 'no', // Disable default scanning UI
                 uiError: 'no',    // Disable default error UI
