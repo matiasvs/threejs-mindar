@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { MindARThree } from 'mindar-image-three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 class ARApp {
     constructor() {
@@ -8,7 +9,7 @@ class ARApp {
         this.camera = null;
         this.renderer = null;
         this.anchor = null;
-        this.cube = null;
+        this.model = null;
     }
 
     async init() {
@@ -99,11 +100,11 @@ class ARApp {
             console.log('MindAR initialized successfully');
 
             // Add ambient light
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            const ambientLight = new THREE.AmbientLight(0xffffff, 1.0); // Increased intensity for models
             this.scene.add(ambientLight);
 
             // Add directional light
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5); // Increased intensity
             directionalLight.position.set(1, 1, 1);
             this.scene.add(directionalLight);
 
@@ -114,24 +115,37 @@ class ARApp {
                 throw new Error('Failed to create anchor');
             }
 
-            // Create 3D content - Cube (50% size) with Z-axis rotation
-            const geometry = new THREE.BoxGeometry(1, 1, 1);
-            const material = new THREE.MeshStandardMaterial({
-                color: 0x00ff88,
-                metalness: 0.5,
-                roughness: 0.3,
-            });
-            this.cube = new THREE.Mesh(geometry, material);
-            this.cube.scale.set(0.5, 0.5, 0.5); // Reduced by 50%
-            this.cube.position.set(0, 0, 0.5);
-            this.anchor.group.add(this.cube);
+            // Load 3D Model
+            const loader = new GLTFLoader();
+            console.log('Loading model...');
 
-            // Add wireframe overlay
-            const wireframe = new THREE.LineSegments(
-                new THREE.EdgesGeometry(geometry),
-                new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 })
-            );
-            this.cube.add(wireframe);
+            try {
+                const gltf = await new Promise((resolve, reject) => {
+                    loader.load(
+                        './mi-modelo.glb',
+                        (gltf) => resolve(gltf),
+                        (progress) => console.log('Loading progress:', (progress.loaded / progress.total * 100) + '%'),
+                        (error) => reject(error)
+                    );
+                });
+
+                this.model = gltf.scene;
+                this.model.scale.set(0.5, 0.5, 0.5); // Default scale
+                this.model.position.set(0, 0, 0);
+
+                // Center the model
+                const box = new THREE.Box3().setFromObject(this.model);
+                const center = box.getCenter(new THREE.Vector3());
+                this.model.position.sub(center); // Center it at 0,0,0
+                this.model.position.z += 0.5; // Move it slightly up/forward if needed, or keep at 0
+
+                this.anchor.group.add(this.model);
+                console.log('Model loaded successfully');
+
+            } catch (loadError) {
+                console.error('Error loading model:', loadError);
+                throw new Error(`Failed to load model: ${loadError.message}`);
+            }
 
             // Event listeners
             this.anchor.onTargetFound = () => {
@@ -173,8 +187,6 @@ class ARApp {
 
             loadingScreen.style.display = 'none';
 
-            loadingScreen.style.display = 'none';
-
             // Provide specific error messages
             const errorMsg = error?.message || String(error);
 
@@ -193,9 +205,9 @@ class ARApp {
     animate() {
         requestAnimationFrame(() => this.animate());
 
-        // Slow rotation on Z-axis
-        if (this.cube) {
-            this.cube.rotation.z += 0.005; // Slow rotation
+        // Slow rotation on Z-axis for the model
+        if (this.model) {
+            this.model.rotation.y += 0.01; // Rotate around Y axis (usually better for models)
         }
 
         this.renderer.render(this.scene, this.camera);

@@ -13,7 +13,7 @@ export default defineConfig({
         ar: './ar.html',
         viewer: './viewer.html',
       },
-      external: ['three', 'mindar-image-three', 'three/addons/controls/OrbitControls.js'],
+      external: ['three', 'mindar-image-three', 'three/addons/controls/OrbitControls.js', 'three/addons/loaders/GLTFLoader.js'],
     },
   },
   server: {
