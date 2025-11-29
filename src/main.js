@@ -41,7 +41,7 @@ class ARApp {
             // Create anchor (target 0)
             this.anchor = this.mindarThree.addAnchor(0);
 
-            // Create 3D content - Animated cube
+            // Create 3D content - Cube (50% size) with Z-axis rotation
             const geometry = new THREE.BoxGeometry(1, 1, 1);
             const material = new THREE.MeshStandardMaterial({
                 color: 0x00ff88,
@@ -49,6 +49,7 @@ class ARApp {
                 roughness: 0.3,
             });
             this.cube = new THREE.Mesh(geometry, material);
+            this.cube.scale.set(0.5, 0.5, 0.5); // Reduced by 50%
             this.cube.position.set(0, 0, 0.5);
             this.anchor.group.add(this.cube);
 
@@ -106,10 +107,9 @@ class ARApp {
     animate() {
         requestAnimationFrame(() => this.animate());
 
-        // Rotate cube
+        // Slow rotation on Z-axis
         if (this.cube) {
-            this.cube.rotation.x += 0.01;
-            this.cube.rotation.y += 0.01;
+            this.cube.rotation.z += 0.005; // Slow rotation
         }
 
         this.renderer.render(this.scene, this.camera);

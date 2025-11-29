@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js + MindAR - Selecciona Versión</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .card-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .card-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .card-features li {
+            padding: 8px 0;
+            color: #666;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-features li:last-child {
+            border-bottom: none;
+        }
+
+        .card-features li::before {
+            content: "✓ ";
+            color: #00ff88;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .btn {
+            display: block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎯 Three.js + MindAR</h1>
+
+        <div class="cards">
+            <!-- AR Image Tracking Card -->
+            <a href="./index.html" class="card">
+                <div class="card-icon">📱</div>
+                <h2>AR Image Tracking</h2>
+                <p class="card-description">
+                    Experiencia de realidad aumentada con detección de imagen objetivo
+                </p>
+                <ul class="card-features">
+                    <li>MindAR Image Tracking</li>
+                    <li>Cubo reducido 50%</li>
+                    <li>Rotación lenta en eje Z</li>
+                    <li>Requiere cámara</li>
+                </ul>
+                <span class="btn">Abrir AR Tracking</span>
+            </a>
+
+            <!-- 3D Viewer Card -->
+            <a href="./viewer.html" class="card">
+                <div class="card-icon">🎮</div>
+                <h2>3D Viewer</h2>
+                <p class="card-description">
+                    Visualizador 3D interactivo con controles de cámara
+                </p>
+                <ul class="card-features">
+                    <li>OrbitControls interactivos</li>
+                    <li>Cubo reducido 50%</li>
+                    <li>Control manual de cámara</li>
+                    <li>No requiere cámara</li>
+                </ul>
+                <span class="btn">Abrir Viewer</span>
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>

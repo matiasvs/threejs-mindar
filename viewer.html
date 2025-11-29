@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Viewer - OrbitControls</title>
+
+    <!-- Import map for ES modules -->
+    <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.149.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.149.0/examples/jsm/"
+    }
+  }
+  </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        #viewer-container {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        #info h2 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        #info p {
+            margin: 5px 0;
+            opacity: 0.9;
+        }
+
+        .controls-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Info Panel -->
+    <div id="info">
+        <h2>🎮 3D Viewer</h2>
+        <p>Cubo con OrbitControls</p>
+        <p>Tamaño: 50% reducido</p>
+    </div>
+
+    <!-- Viewer Container -->
+    <div id="viewer-container"></div>
+
+    <!-- Controls Hint -->
+    <div class="controls-hint">
+        🖱️ Click y arrastra para rotar | Scroll para zoom | Click derecho para mover
+    </div>
+
+    <!-- Load our app as ES module -->
+    <script type="module" src="/src/viewer.js"></script>
+</body>
+
+</html>
