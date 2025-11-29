@@ -29,18 +29,33 @@ class ARApp {
                 container.style.height = '100vh';
             }
 
+            // Wait a bit to ensure DOM is fully ready
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            console.log('Initializing MindAR...');
+
             // Initialize MindAR with smoothing for better stability
             this.mindarThree = new MindARThree({
                 container: container,
-                imageTargetSrc: './targets.mind', // Compiled target file
-                filterMinCF: 0.0001, // Reduce jitter (default: 0.001)
-                filterBeta: 1000,    // Smoothing factor (default: 1000)
+                imageTargetSrc: './targets.mind',
+                filterMinCF: 0.0001,
+                filterBeta: 1000,
             });
 
+            // Wait for MindAR to be ready
+            await new Promise(resolve => setTimeout(resolve, 200));
+
             const { renderer, scene, camera } = this.mindarThree;
+
+            if (!renderer || !scene || !camera) {
+                throw new Error('MindAR failed to initialize renderer, scene, or camera');
+            }
+
             this.renderer = renderer;
             this.scene = scene;
             this.camera = camera;
+
+            console.log('MindAR initialized successfully');
 
             // Add ambient light
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -53,6 +68,10 @@ class ARApp {
 
             // Create anchor (target 0)
             this.anchor = this.mindarThree.addAnchor(0);
+
+            if (!this.anchor) {
+                throw new Error('Failed to create anchor');
+            }
 
             // Create 3D content - Cube (50% size) with Z-axis rotation
             const geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -82,8 +101,16 @@ class ARApp {
                 console.log('Target lost!');
             };
 
-            // Start AR
-            await this.mindarThree.start();
+            console.log('Starting AR...');
+
+            // Start AR with error handling
+            try {
+                await this.mindarThree.start();
+                console.log('AR started successfully');
+            } catch (startError) {
+                console.error('Error starting AR:', startError);
+                throw new Error(`Failed to start AR: ${startError.message || 'Unknown error'}`);
+            }
 
             // Hide loading screen
             loadingScreen.classList.add('hidden');
