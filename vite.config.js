@@ -10,8 +10,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: './index.html',
+        ar: './ar.html',
         viewer: './viewer.html',
-        home: './home.html',
       },
       external: ['three', 'mindar-image-three', 'three/addons/controls/OrbitControls.js'],
     },
@@ -19,6 +19,6 @@ export default defineConfig({
   server: {
     host: true,
     port: 3000,
-    open: '/home.html',
+    open: './index.html',
   },
 });
