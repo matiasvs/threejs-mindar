@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 class Viewer3D {
     constructor() {
@@ -7,7 +8,7 @@ class Viewer3D {
         this.camera = null;
         this.renderer = null;
         this.controls = null;
-        this.cube = null;
+        this.model = null;
     }
 
     init() {
@@ -40,10 +41,10 @@ class Viewer3D {
         this.controls.maxDistance = 10;
 
         // Add lights
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.0); // Increased intensity
         this.scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5); // Increased intensity
         directionalLight.position.set(5, 5, 5);
         this.scene.add(directionalLight);
 
@@ -51,23 +52,42 @@ class Viewer3D {
         pointLight.position.set(-5, 3, -5);
         this.scene.add(pointLight);
 
-        // Create cube (50% size)
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshStandardMaterial({
-            color: 0x00ff88,
-            metalness: 0.5,
-            roughness: 0.3,
-        });
-        this.cube = new THREE.Mesh(geometry, material);
-        this.cube.scale.set(0.5, 0.5, 0.5); // Reduced by 50%
-        this.scene.add(this.cube);
+        // Load 3D Model
+        const loader = new GLTFLoader();
+        console.log('Loading model in viewer...');
 
-        // Add wireframe overlay
-        const wireframe = new THREE.LineSegments(
-            new THREE.EdgesGeometry(geometry),
-            new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 })
+        loader.load(
+            './mi-modelo.glb',
+            (gltf) => {
+                this.model = gltf.scene;
+                this.model.scale.set(0.5, 0.5, 0.5); // Default scale
+
+                // Center the model
+                const box = new THREE.Box3().setFromObject(this.model);
+                const center = box.getCenter(new THREE.Vector3());
+                this.model.position.sub(center); // Center it at 0,0,0
+
+                this.scene.add(this.model);
+                console.log('Model loaded in viewer');
+
+                // Update info text
+                const infoP = document.querySelector('#info p:nth-child(2)');
+                if (infoP) infoP.textContent = 'Modelo: mi-modelo.glb';
+            },
+            (progress) => {
+                console.log('Loading progress:', (progress.loaded / progress.total * 100) + '%');
+            },
+            (error) => {
+                console.error('Error loading model:', error);
+                const info = document.getElementById('info');
+                if (info) {
+                    const errorMsg = document.createElement('p');
+                    errorMsg.style.color = '#ff4444';
+                    errorMsg.textContent = 'Error cargando modelo';
+                    info.appendChild(errorMsg);
+                }
+            }
         );
-        this.cube.add(wireframe);
 
         // Add grid helper
         const gridHelper = new THREE.GridHelper(10, 10, 0x444444, 0x222222);
